@@ -1,6 +1,6 @@
 # Simpler-AngryBirds
-基于JBox2D物理引擎实现的简单版“愤怒的小鸟”小游戏
-Final Project for Java程序设计
+- 基于JBox2D物理引擎实现的简单版“愤怒的小鸟”小游戏
+- Final Project for Java程序设计
 
 ## 文件结构
 - 源代码位于project目录中
