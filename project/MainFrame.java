@@ -117,8 +117,8 @@ public class MainFrame extends MyFrame{
         bodyList = new ArrayList<MyBody>();
         pigList = new ArrayList<MyBody>();
         imageList = new ArrayList<MyImage>();
-        birdList = new ArrayList<MyBody>();
         waitingBirdList = new ArrayList<MyImage>();
+        bird = null;
 
         bgmPlayer = new AudioPlayer("Audio/music/ambience_jungle.mp3");
         beginPlayer = new AudioPlayer("Audio/sfx/level_start_military_a" + randomInt(2) + ".mp3");

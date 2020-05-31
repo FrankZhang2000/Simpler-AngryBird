@@ -27,9 +27,9 @@ public class GameController implements MouseListener, MouseMotionListener{
 		// 无等待鸟、当前有鸟或游戏已经结束时不接受拖动
 		if(myFrame.waitingBirdList.isEmpty())
 			return;
-		if(!myFrame.birdList.isEmpty())
+		if(myFrame.bird != null)
 			return;
-		if(gameOver)
+		if(gameOver || paused)
 			return;
 
 		// 鼠标坐标
@@ -71,9 +71,9 @@ public class GameController implements MouseListener, MouseMotionListener{
 		// 无等待鸟、当前有鸟或游戏已经结束时不接受拖动
 		if(myFrame.waitingBirdList.isEmpty())
 			return;
-		if(!myFrame.birdList.isEmpty())
+		if(myFrame.bird != null)
 			return;
-		if(gameOver)
+		if(gameOver || paused)
 			return;
 
 		// 计算鸟的初速度
@@ -88,9 +88,7 @@ public class GameController implements MouseListener, MouseMotionListener{
 		if(isDragged){
 			if(myHandL > HAND_BOTTOM_LIMIT){
 				myFrame.waitingBirdList.remove(0);	// 删除等待鸟列表的第一个元素
-				EventQueue.invokeLater(() -> {
-					myFrame.birdList.add(createBird(handX - 30, handY, myFrame.world, vx, vy, 20));
-				});
+				myFrame.bird = createBird(handX - 30, handY, myFrame.world, vx, vy, 20);
 				new AudioPlayer("Audio/sfx/bird_shot-a" + randomInt(3) + ".mp3").start();
 				new AudioPlayer("Audio/sfx/bird_0" + randomInt(6) + "_flying.mp3").start();
 			}
@@ -139,13 +137,12 @@ public class GameController implements MouseListener, MouseMotionListener{
 			myFrame.dispose();
 		}
 		// 清除当前鸟按钮
-		else if((int)getDistance(handX, handY, KILLBIRD_CENTER_X, KILLBIRD_CENTER_Y) <= KILLBIRD_RADIUS){
+		else if((int)getDistance(handX, handY, KILLBIRD_CENTER_X, KILLBIRD_CENTER_Y) <= KILLBIRD_RADIUS && !paused){
 			// 只在有鸟时操作
-			if(!myFrame.birdList.isEmpty()){
-				MyBody myBody = myFrame.birdList.get(0);
+			if(myFrame.bird != null){
 				new AudioPlayer("Audio/sfx/bird_destroyed.mp3").start();
-				myFrame.world.destroyBody(myBody.body);	// 从世界中移除物体
-            	myFrame.birdList.remove(0);				// 从列表中移除物体
+				myFrame.world.destroyBody(myFrame.bird.body);	// 从世界中移除物体
+            	myFrame.bird = null;
             	birdNum--;
             	// 如果有下一个鸟，则将下一个鸟放到弹弓上
             	if(!myFrame.waitingBirdList.isEmpty()){

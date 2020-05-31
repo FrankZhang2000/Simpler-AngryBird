@@ -43,9 +43,9 @@ public class Menu extends JFrame{
         textArea.setLineWrap(true);
         textArea.setEditable(false);
         textArea.append("玩法: 发射小鸟，消灭所有小猪获得胜利！\n\n");
-        textArea.append("Simpler-AngryBird\n");
+        textArea.append("Simpler-AngryBirds\n");
         textArea.append("基于JBox2D的\"愤怒的小鸟\"简易实现\n\n");
-        textArea.append("GitHub: https://github.com/FrankZhang2000/Simpler-AngryBird\n");
+        textArea.append("GitHub: https://github.com/FrankZhang2000/Simpler-AngryBirds\n");
         textArea.append("邮件: zhangyifeng2000@pku.edu.cn\n");
         textArea.append("作者: 张弋丰 曹和景 贾志东 尹训健\n\n");
         textArea.append("本程序用途仅限学习、交流。\n\n");
@@ -58,7 +58,7 @@ public class Menu extends JFrame{
 
         // 创建按钮  
         beginBut = new JButton("开始游戏");
-		beginBut.setBounds(W_FRAME / 2 - 100, H_FRAME / 2, 160, 30);
+		beginBut.setBounds(W_FRAME / 2 - 80, H_FRAME / 2, 160, 30);
 		beginBut.addActionListener(e -> {
             bgmPlayer.close();
             new LevelOption();
@@ -66,7 +66,7 @@ public class Menu extends JFrame{
         });
 		
 		helpBut = new JButton("帮助");
-		helpBut.setBounds(W_FRAME / 2 - 100, 5 * H_FRAME / 8, 160, 30);
+		helpBut.setBounds(W_FRAME / 2 - 80, 5 * H_FRAME / 8, 160, 30);
 		helpBut.addActionListener(e -> {
 			help.setVisible(true);
         });
@@ -77,7 +77,7 @@ public class Menu extends JFrame{
         layeredPane.add(beginBut, JLayeredPane.MODAL_LAYER);
         layeredPane.add(helpBut, JLayeredPane.MODAL_LAYER);
 
-        this.setTitle("Welcome to AngryBird");
+        this.setTitle("Welcome to AngryBirds");
         this.setLayeredPane(layeredPane);
         this.setSize(W_FRAME, H_FRAME);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

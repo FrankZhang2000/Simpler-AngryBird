@@ -39,7 +39,7 @@ public class LevelOption extends JFrame{
         // 创建按钮
         for(int i = 0; i < levelbut.length; i++){
 			levelbut[i] = new JButton("Level" + (i + 1));
-			levelbut[i].setBounds(W_FRAME / 2 - 100, 200 + 100 * i, 160, 30);
+			levelbut[i].setBounds(W_FRAME / 2 - 80, 200 + 100 * i, 160, 30);
 			levelbut[i].setVisible(true);
 		}
         

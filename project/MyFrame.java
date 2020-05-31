@@ -16,10 +16,10 @@ public abstract class MyFrame extends JFrame{
 	public WindowDisplay wd;	// 绘图对象
 	public World world;			// 物理世界
 	public List<MyBody> bodyList;	// 刚体列表
-	public List<MyBody> birdList;	// 鸟列表
 	public List<MyBody> pigList;	// 猪列表
 	public List<MyImage> imageList;	// 非刚体图片列表
 	public List<MyImage> waitingBirdList;	// 等待鸟列表
+	public MyBody bird;
 	public Image bgnd;	// 背景图片
 
 	public AudioPlayer bgmPlayer;

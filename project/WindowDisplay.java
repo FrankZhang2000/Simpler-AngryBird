@@ -78,32 +78,17 @@ public class WindowDisplay extends JPanel{
             image.drawSelf(g);
         }
 
-        Iterator<MyBody> iterator;
-
         // 绘制鸟
-        iterator = myFrame.birdList.iterator();
-        while(iterator.hasNext()){
-            MyBody myBody = iterator.next();
-            // 鸟的生命值为0时删除鸟
-            if(myBody.hp <= 0){
-                new AudioPlayer("Audio/sfx/bird_destroyed.mp3").start();
-                myFrame.world.destroyBody(myBody.body); // 从世界中移除物体
-                iterator.remove();                      // 从列表中移除物体
-                birdNum--;
-                // 如果有下一个鸟，则将下一个鸟放到弹弓上
-                if(!myFrame.waitingBirdList.isEmpty()){
-                    myFrame.waitingBirdList.get(0).x = SLING_X + 5;
-                    myFrame.waitingBirdList.get(0).y = SLING_Y;
-                }
-            }
-            // 鸟的速度连续多次过小时删除鸟
-            else if(myBody.body.getLinearVelocity().length() < DESTROY_SPD){
-                destroy_cnt++;
-                if(destroy_cnt > DESTROY_LIMIT){
-                    destroy_cnt = 0;
+        if(myFrame.bird != null){
+            // 游戏暂停时，仅绘制不删除
+            if(paused)
+                myFrame.bird.drawSelf(g);
+            else{
+                // 鸟的生命值为0时删除鸟
+                if(myFrame.bird.hp <= 0){
                     new AudioPlayer("Audio/sfx/bird_destroyed.mp3").start();
-                    myFrame.world.destroyBody(myBody.body); // 从世界中移除物体
-                    iterator.remove();                      // 从列表中移除物体
+                    myFrame.world.destroyBody(myFrame.bird.body); // 从世界中移除物体
+                    myFrame.bird = null;
                     birdNum--;
                     // 如果有下一个鸟，则将下一个鸟放到弹弓上
                     if(!myFrame.waitingBirdList.isEmpty()){
@@ -111,21 +96,39 @@ public class WindowDisplay extends JPanel{
                         myFrame.waitingBirdList.get(0).y = SLING_Y;
                     }
                 }
-                else
-                    myBody.drawSelf(g);
-            }
-            else{
-                myBody.drawSelf(g);
-                destroy_cnt = 0;
+                // 鸟的速度连续多次过小时删除鸟
+                else if(myFrame.bird.body.getLinearVelocity().length() < DESTROY_SPD){
+                    destroy_cnt++;
+                    if(destroy_cnt > DESTROY_LIMIT){
+                        destroy_cnt = 0;
+                        new AudioPlayer("Audio/sfx/bird_destroyed.mp3").start();
+                        myFrame.world.destroyBody(myFrame.bird.body); // 从世界中移除物体
+                        myFrame.bird = null;
+                        birdNum--;
+                        // 如果有下一个鸟，则将下一个鸟放到弹弓上
+                        if(!myFrame.waitingBirdList.isEmpty()){
+                            myFrame.waitingBirdList.get(0).x = SLING_X + 5;
+                            myFrame.waitingBirdList.get(0).y = SLING_Y;
+                        }
+                    }
+                    else
+                        myFrame.bird.drawSelf(g);
+                }
+                else{
+                    myFrame.bird.drawSelf(g);
+                    destroy_cnt = 0;
+                }
             }
         }
+
+        Iterator<MyBody> iterator;
 
         // 绘制所有猪
         iterator = myFrame.pigList.iterator();
         while(iterator.hasNext()){
             MyBody myBody = iterator.next();
-            // 生命值为0，则删除
-            if(myBody.hp <= 0){
+            // 生命值为0且游戏未暂停，则删除
+            if(myBody.hp <= 0 && !paused){
                 new AudioPlayer("Audio/sfx/fruit_breaking_a" + randomInt(3) + ".mp3").start();
                 myFrame.world.destroyBody(myBody.body); // 从世界中移除物体
                 iterator.remove();                      // 从列表中移除物体
@@ -138,8 +141,8 @@ public class WindowDisplay extends JPanel{
         iterator = myFrame.bodyList.iterator();
         while(iterator.hasNext()){
             MyBody myBody = iterator.next();
-            // 可运动刚体生命值为0，则删除
-            if(myBody.hp <= 0 && myBody.bk != BodyKind.staticBody){
+            // 可运动刚体生命值为0且游戏未暂停，则删除
+            if(myBody.hp <= 0 && myBody.bk != BodyKind.staticBody && !paused){
                 AudioPlayer player;
                 if(myBody.bk == BodyKind.rectStone || myBody.bk == BodyKind.circStone)
                     player = new AudioPlayer("Audio/sfx/rock_damage_a" + randomInt(3) + ".mp3");
@@ -156,7 +159,7 @@ public class WindowDisplay extends JPanel{
         }
         
         // 绘制弹弓上的皮筋
-        if(isDragged){
+        if(isDragged && !paused){
         	Graphics2D g2 = (Graphics2D)g;
 			g2.setStroke(new BasicStroke(4.0f));
 			g2.setColor(Color.BLACK);
@@ -165,13 +168,15 @@ public class WindowDisplay extends JPanel{
         }
 
         // 判定游戏是否结束
-        if(myFrame.pigList.isEmpty() && !gameOver){
-            gameOver = true;
-        	new YouWinOrLose(true, myFrame);
-        }
-        else if(birdNum == 0 && !gameOver){
-            gameOver = true;
-        	new YouWinOrLose(false, myFrame);
+        if(!paused){
+            if(myFrame.pigList.isEmpty() && !gameOver){
+                gameOver = true;
+        	    new YouWinOrLose(true, myFrame);
+            }
+            else if(birdNum == 0 && !gameOver){
+                gameOver = true;
+        	    new YouWinOrLose(false, myFrame);
+            }
         }
     }
 
